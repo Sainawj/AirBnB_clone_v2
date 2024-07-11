@@ -1,75 +1,37 @@
 #!/usr/bin/env bash
-# Installs, configures, and starts the web server
+# Script to set up web servers for deployment of web_static
 
-# NGINX server configuration block
-SERVER_CONFIG="server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    server_name _;
-    index index.html index.htm;
-    error_page 404 /404.html;
-    add_header X-Served-By \$hostname;
-
-    location / {
-        root /var/www/html/;
-        try_files \$uri \$uri/ =404;
-    }
-
-    location /hbnb_static/ {
-        alias /data/web_static/current/;
-        try_files \$uri \$uri/ =404;
-    }
-
-    if (\$request_filename ~ redirect_me) {
-        rewrite ^ https://sketchfab.com/bluepeno/models permanent;
-    }
-
-    location = /404.html {
-        root /var/www/error/;
-        internal;
-    }
-}"
-
-# HTML content for the home page
-HOME_PAGE="<!DOCTYPE html>
-<html lang='en-US'>
-<head>
-    <title>Home - AirBnB Clone</title>
-</head>
-<body>
-    <h1>Welcome to AirBnB!</h1>
-</body>
-</html>
-"
-
-# Check if NGINX is installed, if not, install it
-if [[ "$(which nginx | grep -c nginx)" == '0' ]]; then
+# Install Nginx if it's not installed already
+if ! dpkg -l | grep -q nginx; then
     apt-get update
-    apt-get -y install nginx
+    apt-get install -y nginx
 fi
 
-# Create necessary directories and set permissions
-mkdir -p /var/www/html /var/www/error
-chmod -R 755 /var/www
-echo 'Hello World!' > /var/www/html/index.html
-echo -e "Ceci n\x27est pas une page" > /var/www/error/404.html
+# Create necessary directories
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
 
-# Setup for web_static directory structure
-mkdir -p /data/web_static/releases/test /data/web_static/shared
-echo -e "$HOME_PAGE" > /data/web_static/releases/test/index.html
-[ -d /data/web_static/current ] && rm -rf /data/web_static/current
+# Create a sample HTML file
+echo "<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>" > /data/web_static/releases/test/index.html
+
+# Create a symbolic link
 ln -sf /data/web_static/releases/test/ /data/web_static/current
-chown -hR ubuntu:ubuntu /data
 
-# Configure NGINX server with custom settings
-bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-available/default"
-ln -sf '/etc/nginx/sites-available/default' '/etc/nginx/sites-enabled/default'
+# Assign ownership of /data/ folder to ubuntu user and group
+chown -R ubuntu:ubuntu /data/
 
-# Start or restart NGINX service
-if [ "$(pgrep -c nginx)" -le 0 ]; then
-    service nginx start
-else
-    service nginx restart
-fi
+# Update Nginx configuration to serve content from /data/web_static/current/ to hbnb_static
+sed -i '/server_name _;/a \\\n    location /hbnb_static/ {\n        alias /data/web_static/current/;\n    }' /etc/nginx/sites-available/default
+
+# Restart Nginx
+service nginx restart
+
+# Ensure the script exits successfully
+exit 0
 
