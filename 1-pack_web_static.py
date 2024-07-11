@@ -31,4 +31,3 @@ def do_pack():
         output = None
 
     return output
-
