@@ -5,7 +5,7 @@ from datetime import datetime
 from fabric.api import env, local, put, run, runs_once
 
 
-env.hosts = ["34.73.0.174", "35.196.78.105"]
+env.hosts = ['54.234.98.62', '54.88.200.151']
 """The list of host server IP addresses."""
 
 
@@ -84,7 +84,7 @@ def do_clean(number=0):
     archives = os.listdir('versions/')
     archives.sort(reverse=True)
     start = int(number)
-    
+
     if start <= 0:
         start += 1
 
