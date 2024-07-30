@@ -1,0 +1,140 @@
+/*
+ * === Styles for Places Section ===
+ */
+
+/* Flexbox layout for places */
+.places {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Style for each article */
+.places article {
+  border: 1px solid #ff5a5f;
+  border-radius: 4px;
+  margin: 20px;
+  padding: 20px;
+  width: 390px;
+}
+
+/* Header style for name and price */
+.article_places_header {
+  width: 100%;
+  display: flex;
+}
+
+.price_by_night {
+    min-width: 60px;
+    height: 60px;
+    color: #FF5A5F;
+    border: 4px solid #FF5A5F;
+    border-radius: 50%;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+/* Style for guest, room, and bathroom information */
+.places .information {
+  align-items: center;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+  height: 80px;
+  justify-content: space-around;
+  text-align: center;
+}
+
+/* Width of each guest/room/bathroom section */
+.places .max_guest,
+.places .number_rooms,
+.places .number_bathrooms {
+  width: 100px;
+}
+
+/* Padding around owner information */
+.places .user {
+  margin: 20px auto;
+}
+
+/* Top margin for amenities and reviews sections */
+.places .amenities,
+.places .reviews {
+  margin-top: 40px;
+}
+
+/* Row layout for amenities list */
+.places .amenities li {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Style for individual amenity */
+.places .amenities i {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-right: 10px;
+  width: 5%;
+}
+
+/* Align text with amenity icon */
+.places .amenities p {
+  margin-top: 20px;
+}
+
+/*
+ * -- Header Styles for Places Section --
+ */
+
+/* Style for main header (h1) */
+.places h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin: .67em 0;
+  width: 100%;
+}
+
+/* Adjust main header width for smaller screens */
+@media only screen and (max-width: 1000px) {
+  .places h1 {
+    width: 95%;
+  }
+}
+
+/* Style for subheader (h2) */
+.places h2 {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0 auto;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/* Style for headers in amenities and reviews sections */
+.places .amenities h2,
+.places .reviews h2 {
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+/* Style for sub-subheader (h3) in reviews */
+.places .reviews h3 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  margin-top: 20px;
+}
