@@ -1,26 +1,34 @@
 #!/usr/bin/python3
-"""
-State module for AirBnB clone.
-"""
-
+"""Holds class State"""
+import models
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 from models.city import City
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class State(BaseModel, Base):
-    """State class for handling states in the AirBnB clone."""
+    """Representation of state"""
+    if models.storage_t == "db":
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", backref="state")
+    else:
+        name = ""
 
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
+    def __init__(self, *args, **kwargs):
+        """Initializes state"""
+        super().__init__(*args, **kwargs)
 
-    cities = relationship("City", backref="state", cascade="all, delete-orphan")
-
-    @property
-    def cities(self):
-        """Return a list of City objects related to the State."""
-        from models import storage
-        all_cities = storage.all(City)
-        state_cities = [city for city in all_cities.values() if city.state_id == self.id]
-        return state_cities
+    if models.storage_t != "db":
+        @property
+        def cities(self):
+            """Getter for list of city instances related to the state"""
+            city_list = []
+            all_cities = models.storage.all(City)
+            for city in all_cities.values():
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
