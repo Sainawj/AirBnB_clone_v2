@@ -1,27 +1,26 @@
 #!/usr/bin/python3
-"""State Module for HBNB project."""
-import os
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
+"""
+State module for AirBnB clone.
+"""
 
 from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 from models.city import City
 
 
 class State(BaseModel, Base):
-    """State class."""
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else ''
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship('City', cascade='all, delete, delete-orphan', backref='state')
-    else:
-        @property
-        def cities(self):
-            """Returns the cities in this State."""
-            from models import storage
-            cities_in_state = []
-            for value in storage.all(City).values():
-                if value.state_id == self.id:
-                    cities_in_state.append(value)
-            return cities_in_state
+    """State class for handling states in the AirBnB clone."""
 
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)
+
+    cities = relationship("City", backref="state", cascade="all, delete-orphan")
+
+    @property
+    def cities(self):
+        """Return a list of City objects related to the State."""
+        from models import storage
+        all_cities = storage.all(City)
+        state_cities = [city for city in all_cities.values() if city.state_id == self.id]
+        return state_cities
